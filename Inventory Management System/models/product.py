@@ -17,14 +17,11 @@ class Product:
         self._description = description
         self._expiry_date = expiry_date  # format "YYYY-MM-DD" or None
 
-        # Getters and Setters
+    # Getters and Setters
+
     @property
     def product_id(self):
         return self._id
-
-    @property
-    def description(self):
-        return self._description
     
     @property
     def name(self):
@@ -65,12 +62,18 @@ class Product:
         self._category = value.strip().lower()
 
     @property
+    def description(self):
+        return self._description
+
+    @property
     def expiry_date(self):
         return self._expiry_date
 
     @expiry_date.setter
     def expiry_date(self, value):
         self._expiry_date = value
+
+    # Methods
 
     def is_low_stock(self, threshold=5):
         """Returns True if product is not enough"""
@@ -124,3 +127,53 @@ class Product:
 
     def __hash__(self):
         return hash(self._id)
+    
+
+class DiscountedProduct(Product):
+    """Discounted product - inherited from Product"""
+
+    def __init__(self, product_id, name, price, quantity, category="general",
+                 description="", expiry_date=None, discount_percent=0.0):
+        super().__init__(product_id, name, price, quantity, category, description, expiry_date)
+
+        if not (0 <= discount_percent <= 100):
+            raise ValueError("Discount must be between 0 and 100")
+        self._discount = discount_percent
+
+    @property
+    def discount(self):
+        return self._discount
+
+    @discount.setter
+    def discount(self, value):
+        if not (0 <= value <= 100):
+            raise ValueError("Discount must be between 0 and 100")
+        self._discount = value
+
+    def discounted_price(self):
+        """Sale price"""
+        return round(self._price * (1 - self._discount / 100), 2)
+
+    def to_dict(self):
+        d = super().to_dict()
+        d["discount_percent"] = self._discount
+        return d
+
+    @classmethod
+    def from_dict(cls, data):
+        return cls(
+            product_id=int(data["id"]),
+            name=str(data["name"]),
+            price=float(data["price"]),
+            quantity=int(data["quantity"]),
+            category=data.get("category", "general"),
+            description=data.get("description", ""),
+            expiry_date=data.get("expiry_date", None),
+            discount_percent=float(data.get("discount_percent", 0.0))
+        )
+
+    def __repr__(self):
+        return (f"DiscountedProduct(id={self._id}, name={self._name}, "
+                f"price={self._price}, discount={self._discount}%, "
+                f"final={self.discounted_price()})")
+    
