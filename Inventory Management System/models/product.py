@@ -115,3 +115,12 @@ class Product:
             description=data.get("description", ""),
             expiry_date=data.get("expiry_date", None)
         )
+    
+    def __repr__(self):
+        return f"Product(id={self._id}, name={self._name}, price={self._price}, qty={self._quantity})"
+
+    def __eq__(self, other):
+        return isinstance(other, Product) and self._id == other._id
+
+    def __hash__(self):
+        return hash(self._id)
