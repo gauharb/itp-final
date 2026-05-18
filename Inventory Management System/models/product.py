@@ -16,3 +16,12 @@ class Product:
         self._category = category.strip().lower()
         self._description = description
         self._expiry_date = expiry_date  # format "YYYY-MM-DD" or None
+
+        # Getters and Setters
+    @property
+    def product_id(self):
+        return self._id
+
+    @property
+    def description(self):
+        return self._description
