@@ -71,3 +71,22 @@ class Product:
     @expiry_date.setter
     def expiry_date(self, value):
         self._expiry_date = value
+
+    def is_low_stock(self, threshold=5):
+        """Returns True if product is not enough"""
+        return self._quantity <= threshold
+
+    def is_expired(self):
+        """Returns True if the expiration date has passed"""
+        if self._expiry_date is None:
+            return False
+        expiry = date.fromisoformat(self._expiry_date)
+        return expiry < date.today()
+
+    def days_until_expiry(self):
+        """Returns the number of days before the deadline expires.None if no date"""
+        if self._expiry_date is None:
+            return None
+        expiry = date.fromisoformat(self._expiry_date)
+        delta = expiry - date.today()
+        return delta.days
