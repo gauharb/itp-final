@@ -90,3 +90,28 @@ class Product:
         expiry = date.fromisoformat(self._expiry_date)
         delta = expiry - date.today()
         return delta.days
+    
+    def to_dict(self):
+        """Converts an object into a dictionary (to save as JSON)"""
+        return {
+            "id": self._id,
+            "name": self._name,
+            "price": self._price,
+            "quantity": self._quantity,
+            "category": self._category,
+            "description": self._description,
+            "expiry_date": self._expiry_date
+        }
+
+    @classmethod
+    def from_dict(cls, data):
+        """Creates a Product object from the dictionary (when loaded from JSON)"""
+        return cls(
+            product_id=int(data["id"]),
+            name=str(data["name"]),
+            price=float(data["price"]),
+            quantity=int(data["quantity"]),
+            category=data.get("category", "general"),
+            description=data.get("description", ""),
+            expiry_date=data.get("expiry_date", None)
+        )
