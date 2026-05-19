@@ -82,3 +82,11 @@ class InventoryService:
             self._categories.add(fields["category"].strip().lower())
 
          return product
+    
+    # Delete product
+
+    def remove_product(self, product_id):
+        product = self._get_or_raise(product_id)
+        del self._products[product_id]
+        return product
+    
