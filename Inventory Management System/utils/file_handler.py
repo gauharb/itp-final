@@ -66,3 +66,12 @@ class FileHandler:
                 writer.writerow(row)
 
         print(f"  Export completed → {filepath}")
+    def export_low_stock_csv(self, filepath, products, threshold=5):
+    
+        low = [p for p in products if p.is_low_stock(threshold)]
+
+        if not low:
+            print(f"  No products with low stock (threshold={threshold}).")
+            return
+
+        self.export_csv(filepath, low)
