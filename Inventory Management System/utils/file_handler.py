@@ -75,3 +75,13 @@ class FileHandler:
             return
 
         self.export_csv(filepath, low)
+
+    def export_expired_csv(self, filepath, products):
+        expired = [p for p in products if p.is_expired()]
+
+        if not expired:
+            print("No products with expired expiry dates")
+            return
+
+        self.export_csv(filepath, expired)
+        print(f"  Expired products exported → {filepath} ({len(expired)} items)")
