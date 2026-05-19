@@ -81,7 +81,7 @@ class InventoryService:
         if "category" in fields:
             self._categories.add(fields["category"].strip().lower())
 
-         return product
+        return product
     
     # Delete product
 
@@ -90,3 +90,59 @@ class InventoryService:
         del self._products[product_id]
         return product
     
+    # Get product by id
+
+    def get_product(self, product_id):
+        return self._get_or_raise(product_id)
+
+    # Search and filter
+
+    def search_by_name(self, query):
+        """Search products by name"""
+        query = query.strip().lower()
+
+        return [
+            p for p in self._products.values()
+            if query in p.name.lower()
+        ]
+
+    def filter_by_category(self, category):
+        """Get products from a specific category"""
+        cat = category.strip().lower()
+
+        return [
+            p for p in self._products.values()
+            if p.category == cat
+        ]
+
+    def filter_by_price_range(self, min_price, max_price):
+        """Get products within a price range"""
+
+        if min_price > max_price:
+            raise ValueError("Minimum price cannot be greater than maximum price")
+
+        return [
+            p for p in self._products.values()
+            if min_price <= p.price <= max_price
+        ]
+
+    def get_low_stock(self, threshold=5):
+        """Get products with low stock"""
+
+        return [
+            p for p in self._products.values()
+            if p.is_low_stock(threshold)
+        ]
+
+    def get_all_products(self):
+        """Get all products sorted by ID"""
+
+        return sorted(
+            self._products.values(),
+            key=lambda p: p.product_id
+        )
+
+    def get_categories(self):
+        """Get all categories"""
+
+        return set(self._categories)
