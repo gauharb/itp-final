@@ -33,3 +33,36 @@ class FileHandler:
         data = [p.to_dict() for p in products]
         with open(filepath, "w", encoding="utf-8") as f:
             json.dump(data, f, indent=2, ensure_ascii=False)
+
+    def export_csv(self, filepath, products):
+        if not products:
+            print("  No products to export.")
+            return
+
+        os.makedirs(os.path.dirname(filepath) or ".", exist_ok=True)
+
+        fields = [
+             "id", "name", "category", "price",
+             "quantity", "discount_percent",
+             "discounted_price", "expiry_date",
+             "description"
+        ]
+
+        with open(filepath, "w", newline="", encoding="utf-8") as f:
+            writer = csv.DictWriter(f, fieldnames=fields, extrasaction="ignore")
+            writer.writeheader()
+
+            for p in products:
+                row = p.to_dict()
+                row["id"] = p.product_id
+
+                if isinstance(p, DiscountedProduct):
+                    row["discount_percent"] = p.discount
+                    row["discounted_price"] = p.discounted_price()
+                else:
+                    row["discount_percent"] = ""
+                    row["discounted_price"] = ""
+
+                writer.writerow(row)
+
+        print(f"  Export completed → {filepath}")
