@@ -15,3 +15,10 @@ def is_valid_date(value):
 def is_valid_price(value):
     """Checks that the price is a number with a maximum of 2 decimal places"""
     return bool(_PRICE_PATTERN.match(str(value)))
+
+
+def sanitize_name(name):
+    """Removes extra spaces from the name"""
+    name = name.strip()
+    name = re.sub(r"\s+", " ", name)
+    return name
