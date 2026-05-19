@@ -159,7 +159,7 @@ class InventoryService:
     
     @validate_positive
     def sell(self, product_id, amount):
-        ""Sell product ""
+        """Sell product """
         product = self._get_or_raise(product_id)
 
         if product.quantity < amount:
@@ -216,3 +216,23 @@ class InventoryService:
             self._next_id = max(self._products.keys()) + 1
         else:
             self._next_id = 1
+
+
+    # Helper methods
+
+
+    def _get_or_raise(self, product_id):
+        """Get product by id or raise exception"""
+
+        product = self._products.get(product_id)
+
+        if product is None:
+            raise ProductNotFoundError(f"Product with ID {product_id} not found")
+       
+        return product
+
+    def __len__(self):
+        return len(self._products)
+
+    def __contains__(self, product_id):
+        return product_id in self._products
