@@ -191,3 +191,28 @@ class InventoryService:
             self._products.values()
         ))
     
+    
+    # Generator
+
+    def iter_products(self):
+        """Generator that yields products one-by-one"""
+
+        for product in self._products.values():
+            yield product
+
+    # File Loading
+
+    def load_from_list(self, products):
+        """Load products list"""
+
+        self._products.clear()
+        self._categories.clear()
+
+        for p in products:
+            self._products[p.product_id] = p
+            self._categories.add(p.category)
+
+        if self._products:
+            self._next_id = max(self._products.keys()) + 1
+        else:
+            self._next_id = 1
