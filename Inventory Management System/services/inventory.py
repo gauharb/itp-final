@@ -167,3 +167,27 @@ class InventoryService:
         
         product.quantity -= amount
         return product
+    
+
+    # Expiry Date Features
+
+    def get_expired_products(self):
+        """Get all expired products"""
+
+        return [
+            p for p in self._products.values()
+            if p.is_expired()
+        ]
+
+    def get_expiring_soon(self, days=7):
+        """
+        Get products expiring within the next N days
+        Uses filter + lambda
+        """
+
+        return list(filter(
+            lambda p: p.days_until_expiry() is not None
+            and 0 <= p.days_until_expiry() <= days,
+            self._products.values()
+        ))
+    
