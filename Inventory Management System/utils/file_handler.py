@@ -8,6 +8,7 @@ class FileHandler:
 
     DEFAULT_FILE = os.path.join("data", "inventory.json")
 
+    # JSON
 
     def load_json(self, filepath):
         if not os.path.exists(filepath):
@@ -27,12 +28,13 @@ class FileHandler:
                 products.append(Product.from_dict(item))
 
         return products
-    
+
     def save_json(self, filepath, products):
         os.makedirs(os.path.dirname(filepath) or ".", exist_ok=True)
         data = [p.to_dict() for p in products]
         with open(filepath, "w", encoding="utf-8") as f:
             json.dump(data, f, indent=2, ensure_ascii=False)
+
 
     def export_csv(self, filepath, products):
         if not products:
@@ -41,47 +43,45 @@ class FileHandler:
 
         os.makedirs(os.path.dirname(filepath) or ".", exist_ok=True)
 
-        fields = [
-             "id", "name", "category", "price",
-             "quantity", "discount_percent",
-             "discounted_price", "expiry_date",
-             "description"
-        ]
+        fields = ["id", "name", "category", "price", "quantity",
+                  "discount_percent", "discounted_price", "expiry_date", "description"]
 
         with open(filepath, "w", newline="", encoding="utf-8") as f:
             writer = csv.DictWriter(f, fieldnames=fields, extrasaction="ignore")
             writer.writeheader()
-
             for p in products:
                 row = p.to_dict()
                 row["id"] = p.product_id
-
                 if isinstance(p, DiscountedProduct):
                     row["discount_percent"] = p.discount
                     row["discounted_price"] = p.discounted_price()
                 else:
                     row["discount_percent"] = ""
                     row["discounted_price"] = ""
-
                 writer.writerow(row)
 
         print(f"  Export completed → {filepath}")
-    def export_low_stock_csv(self, filepath, products, threshold=5):
-    
-        low = [p for p in products if p.is_low_stock(threshold)]
 
+    def export_low_stock_csv(self, filepath, products, threshold=5):
+        low = [p for p in products if p.is_low_stock(threshold)]
         if not low:
             print(f"  No products with low stock (threshold={threshold}).")
             return
-
         self.export_csv(filepath, low)
 
     def export_expired_csv(self, filepath, products):
         expired = [p for p in products if p.is_expired()]
-
         if not expired:
             print("No products with expired expiry dates")
             return
-
         self.export_csv(filepath, expired)
         print(f"  Expired products exported → {filepath} ({len(expired)} items)")
+
+
+    def load_into_service(self, service, filepath=DEFAULT_FILE):
+        products = self.load_json(filepath)
+        service.load_from_list(products)
+        return len(products)
+
+    def save_from_service(self, service, filepath=DEFAULT_FILE):
+        self.save_json(filepath, service.get_all_products())
