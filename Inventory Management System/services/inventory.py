@@ -146,3 +146,24 @@ class InventoryService:
         """Get all categories"""
 
         return set(self._categories)
+
+    # Inventory management
+
+    @validate_positive
+    def restock_product(self, product_id, amount):
+        """Increase product quantity"""
+
+        product = self._get_or_raise(product_id)
+        product.quantity += amount
+        return product
+    
+    @validate_positive
+    def sell(self, product_id, amount):
+        ""Sell product ""
+        product = self._get_or_raise(product_id)
+
+        if product.quantity < amount:
+            raise ValueError(f"Not enough stock: {product.quantity} available")
+        
+        product.quantity -= amount
+        return product
