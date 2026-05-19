@@ -17,5 +17,49 @@ class InventoryService:
 
         # Add methods to work with products(add,update,delete, etc.)........
 
+        # Add product
+
+        def add_product(
+                self,
+                name,
+                price,
+                quantity,
+                category="general",
+                description="",
+                expiry_date=None,
+                discount=None
+        ):
+                product_id = self._next_id
+
+                if discount is not None:
+                    product = DiscountedProduct(
+                        product_id = product_id,
+                        name = name,
+                        price = price,  
+                        quantity = quantity,
+                        category = category,
+                        description = description,
+                        expiry_date = expiry_date,
+                        discount_percent = discount
+                    )
+                else:
+                    product = Product(
+                        product_id = product_id,
+                        name = name,
+                        price = price,  
+                        quantity = quantity,
+                        category = category,
+                        description = description,
+                        expiry_date = expiry_date
+                    )
+
+                self._products[product_id] = product
+                self._categories.add(category.strip().lower())
+                self._next_id += 1
+
+                return product
+        
+        # Update product 
+    
 
  
