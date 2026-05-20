@@ -1,3 +1,6 @@
+from models.product import DiscountedProduct
+
+
 class ReportService:
     # Class for generating inventory reports
 
@@ -78,3 +81,18 @@ class ReportService:
             ),
             products
         ))
+
+    def print_summary(self, products):
+        stats = self.summary(products)
+
+        print("\n" + "=" * 50)
+        print("   Inventory summary   ")
+        print("=" * 50)
+        print(f"  Total products      : {stats['total_products']}")
+        print(f"  Total value         : ${stats['total_value']:,.2f}")
+        print(f"  Average price       : ${stats['avg_price']:,.2f}")
+        print(f"  Categories          : {', '.join(sorted(stats['categories'])) or 'none'}")
+        print(f"  Low stock           : {stats['low_stock_count']}")
+        print(f"  Out of stock        : {stats['out_of_stock_count']}")
+        print(f"  Expired             : {stats['expired_count']}")
+        print("=" * 50)
