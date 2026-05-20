@@ -32,3 +32,49 @@ class ReportService:
             "out_of_stock_count": len(out_of_stock),
             "expired_count": len(expired)
         }
+
+    def category_breakdown(self, products):
+        # Returns statistics grouped by category
+        breakdown = {}
+
+        for p in products:
+            cat = p.category
+
+            if cat not in breakdown:
+                breakdown[cat] = {
+                    "count": 0,
+                    "total_value": 0.0
+                }
+
+            breakdown[cat]["count"] += 1
+            breakdown[cat]["total_value"] += p.price * p.quantity
+
+        for cat in breakdown:
+            breakdown[cat]["total_value"] = round(
+                breakdown[cat]["total_value"],
+                2
+            )
+
+        return breakdown
+
+    def low_stock_items(self, products, threshold=5):
+        # Returns products with low stock
+        return list(filter(lambda p: p.is_low_stock(threshold), products))
+
+    def out_of_stock_items(self, products):
+        # Returns products with zero quantity
+        return list(filter(lambda p: p.quantity == 0, products))
+
+    def expired_items(self, products):
+        # Returns expired products
+        return [p for p in products if p.is_expired()]
+
+    def expiring_soon_items(self, products, warn_days=7):
+        # Returns products that will expire soon
+        return list(filter(
+            lambda p: (
+                p.days_until_expiry() is not None
+                and 0 <= p.days_until_expiry() <= warn_days
+            ),
+            products
+        ))
