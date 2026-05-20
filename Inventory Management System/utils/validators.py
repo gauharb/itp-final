@@ -48,3 +48,64 @@ def validate_positive(func):
             raise ValueError(f"Quantity must be positive, received: {amount}")
         return func(self, product_id, amount)
     return wrapper
+
+
+# Functions for user input
+
+def prompt_int(prompt, min_val=0, max_val=100000):
+    # Prompts the user to enter an integer within a range
+    while True:
+        raw = input(prompt).strip()
+        try:
+            value = int(raw)
+            if min_val <= value <= max_val:
+                return value
+            else:
+                print(f"  Please enter a number between {min_val} and {max_val}.")
+        except ValueError:
+            print("  That's not a valid number. Please try again.")
+
+
+def prompt_float(prompt, min_val=0.0):
+    # Prompts the user to enter a float
+    while True:
+        raw = input(prompt).strip()
+        if not is_valid_price(raw):
+            print("  Please enter a valid price (e.g., 9.99)")
+            continue
+
+        value = float(raw)
+        if value >= min_val:
+            return value
+
+        print(f"  Value must be >= {min_val}.")
+
+
+def prompt_nonempty(prompt):
+    # Prompts the user to enter a non-empty string
+    while True:
+        value = input(prompt).strip()
+        if value:
+            return sanitize_name(value)
+
+        print("  Field cannot be empty.")
+
+
+def prompt_date(prompt):
+    # Prompts the user to enter a date in YYYY-MM-DD format. Can be skipped.
+    while True:
+        value = input(prompt + " (YYYY-MM-DD or Enter to skip): ").strip()
+
+        if value == "":
+            return None
+
+        if is_valid_date(value):
+            return value
+
+        print("  Invalid format. Please use YYYY-MM-DD (e.g., 2026-12-31)")
+
+
+def confirm(prompt):
+    # Prompts the user to confirm an action
+    answer = input(f"{prompt} [y/n]: ").strip().lower()
+    return answer in ("y", "yes")
