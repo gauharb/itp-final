@@ -96,3 +96,29 @@ class ReportService:
         print(f"  Out of stock        : {stats['out_of_stock_count']}")
         print(f"  Expired             : {stats['expired_count']}")
         print("=" * 50)
+    def print_full_inventory(self, products):
+        print("\n All products ")
+
+        if not products:
+            print("empty")
+            return
+
+        print(
+            f"{'ID':>4}  {'Name':<25} {'Category':<12} "
+            f"{'Price':>8}  {'Quantity':>6}  {'Expiry Date'}"
+        )
+        print("-" * 75)
+
+        for p in products:
+            expiry_str = p.expiry_date if p.expiry_date else "-"
+            expired_tag = " EXPIRED" if p.is_expired() else ""
+            discount_tag = ""
+
+            if isinstance(p, DiscountedProduct):
+                discount_tag = f" (-{p.discount}%)"
+
+            print(
+                f"{p.product_id:>4}  {p.name:<25} {p.category:<12} "
+                f"${p.price:>7.2f}{discount_tag}  "
+                f"{p.quantity:>6}  {expiry_str}{expired_tag}"
+            )
