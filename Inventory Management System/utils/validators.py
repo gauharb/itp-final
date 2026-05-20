@@ -109,3 +109,9 @@ def confirm(prompt):
     # Prompts the user to confirm an action
     answer = input(f"{prompt} [y/n]: ").strip().lower()
     return answer in ("y", "yes")
+
+
+# Formatting helpers
+
+format_price = lambda amount: f"${amount:,.2f}"
+format_id = lambda pid: f"#{pid:04d}"
