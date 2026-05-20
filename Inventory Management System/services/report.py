@@ -96,6 +96,7 @@ class ReportService:
         print(f"  Out of stock        : {stats['out_of_stock_count']}")
         print(f"  Expired             : {stats['expired_count']}")
         print("=" * 50)
+
     def print_full_inventory(self, products):
         print("\n All products ")
 
@@ -121,4 +122,32 @@ class ReportService:
                 f"{p.product_id:>4}  {p.name:<25} {p.category:<12} "
                 f"${p.price:>7.2f}{discount_tag}  "
                 f"{p.quantity:>6}  {expiry_str}{expired_tag}"
+            )
+
+    def print_low_stock(self, products, threshold=5):
+        low = self.low_stock_items(products, threshold)
+
+        print(f"\n Low stock report (threshold <= {threshold})")
+
+        if not low:
+            print("  All products are well-stocked.")
+            return
+
+        for p in low:
+            tag = "  OUT OF STOCK" if p.quantity == 0 else ""
+            print(f"  [{p.product_id:>3}] {p.name:<25} quantity={p.quantity}{tag}")
+
+    def print_category_breakdown(self, products):
+        bd = self.category_breakdown(products)
+
+        print("\n By categories ")
+
+        if not bd:
+            print("  No category data available.")
+            return
+
+        for cat, stats in sorted(bd.items()):
+            print(
+                f"  {cat:<15} {stats['count']:>3} item(s)   "
+                f"value=${stats['total_value']:,.2f}"
             )
