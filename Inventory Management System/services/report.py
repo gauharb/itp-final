@@ -151,3 +151,32 @@ class ReportService:
                 f"  {cat:<15} {stats['count']:>3} item(s)   "
                 f"value=${stats['total_value']:,.2f}"
             )
+
+    def print_expiry_report(self, products, warn_days=7):
+        # Expiry report: expired and expiring soon
+        expired = self.expired_items(products)
+        expiring_soon = self.expiring_soon_items(products, warn_days)
+
+        print("\n Expiry report ")
+
+        if expired:
+            print(f"\n   Expired ({len(expired)} items):")
+            for p in expired:
+                days_ago = abs(p.days_until_expiry())
+                print(
+                    f"    [{p.product_id:>3}] {p.name:<25} "
+                    f"expired: {p.expiry_date} ({days_ago} days ago)"
+                )
+        else:
+            print("\n No products with expired expiry dates.")
+
+        if expiring_soon:
+            print(f"\n   Expiring soon within {warn_days} days:")
+            for p in expiring_soon:
+                days_left = p.days_until_expiry()
+                print(
+                    f"    [{p.product_id:>3}] {p.name:<25} "
+                    f"left: {days_left} days (until {p.expiry_date})"
+                )
+        else:
+            print(f"\n No items expiring within {warn_days} days.")
