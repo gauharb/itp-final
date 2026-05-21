@@ -88,3 +88,45 @@ def do_add(service):
 
         except ProductNotFoundError as e:
             print(f"  ✗ {e}")
+
+    @log_action
+    def do_update(service):
+        print("\n Update Product ")
+
+        pid = prompt_int("  Product ID: ", min_val=1)
+
+        try:
+            product = service.get_product(pid)
+
+        except ProductNotFoundError as e:
+            print(f"  ✗ {e}")
+            return
+
+        print(f"  Current product: {product}")
+
+        print("  Available fields: name, price, quantity, category, description, expiry_date")
+
+        field = input("  Which field to update? ").strip().lower()
+
+        if not field:
+            print("  Cancelled")
+            return
+
+        if field == "price":
+            value = prompt_float(f"  New value for '{field}': ")
+
+        elif field == "quantity":
+            value = prompt_int(f"  New value for '{field}': ", min_val=0)
+
+        elif field == "expiry_date":
+            value = prompt_date("  New expiry date: ")
+
+        else:
+            value = prompt_nonempty(f"  New value for '{field}': ")
+
+        try:
+            updated = service.update_product(pid, **{field: value})
+            print(f"  Updated: {updated}")
+
+        except (ValueError, TypeError) as e:
+            print(f"  ✗ {e}")
