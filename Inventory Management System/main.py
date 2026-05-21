@@ -40,3 +40,34 @@ MENU = """
 ║  0.  Save and Exit                    ║
 ╚═══════════════════════════════════════╝
 """
+@log_action
+def do_add(service):
+    print("\n Add new product ")
+
+    name = prompt_nonempty("Name : ")
+    price = prompt_float("Price (EURO €) : ")
+    quantity = prompt_int("Quantity : ", min_val=0)
+    category = prompt_nonempty("Category : ")
+    description = input("Description: ").strip()
+    expiry = prompt_date("Expiry Date: ")
+
+    has_discount = confirm("Add discount?")
+    discount = None
+
+    if has_discount:
+        discount = prompt_float("  Discount (%) : ", min_val=0.0)
+
+    product = service.add_product(
+        name=name,
+        price=price,
+        quantity=quantity,
+        category=category,
+        description=description,
+        expiry_date=expiry,
+        discount=discount
+    )
+
+    print(
+        f"\n  Product added successfully: "
+        f"{format_id(product.product_id)} — {product.name}"
+    )
