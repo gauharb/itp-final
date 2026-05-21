@@ -76,3 +76,11 @@ class FileHandler:
             return
         self.export_csv(filepath, expired)
         print(f"  Expired products exported → {filepath} ({len(expired)} items)")
+
+    def load_into_service(self, service, filepath=DEFAULT_FILE):
+        products = self.load_json(filepath)
+        service.load_from_list(products)
+        return len(products)
+
+    def save_from_service(self, service, filepath=DEFAULT_FILE):
+        self.save_json(filepath, service.get_all_products())
