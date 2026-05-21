@@ -1,0 +1,21 @@
+[
+  {"id": 1, "name": "Laptop", "price": 1270.00, "quantity": 5, "category": "electronics", "description": "15-inch business laptop", "expiry_date": null, "discount_percent": null},
+  {"id": 2, "name": "Mouse", "price": 25.00, "quantity": 50, "category": "electronics", "description": "Wireless optical mouse", "expiry_date": null, "discount_percent": null},
+  {"id": 3, "name": "Milk", "price": 1.50, "quantity": 10, "category": "food", "description": "Fresh whole milk", "expiry_date": "2026-12-25", "discount_percent": null},
+  {"id": 4, "name": "Monitor", "price": 350.00, "quantity": 8, "category": "electronics", "description": "27-inch 4K monitor", "expiry_date": null, "discount_percent": 10.0},
+  {"id": 5, "name": "Yogurt", "price": 2.00, "quantity": 15, "category": "food", "description": "Strawberry yogurt", "expiry_date": "2026-05-20", "discount_percent": null},
+  {"id": 6, "name": "Webcam", "price": 89.99, "quantity": 2, "category": "electronics", "description": "1080p webcam", "expiry_date": null, "discount_percent": null},
+  {"id": 7, "name": "Cheese", "price": 5.00, "quantity": 8, "category": "food", "description": "Cheddar cheese", "expiry_date": "2026-05-23", "discount_percent": null},
+  {"id": 8, "name": "Notebook", "price": 4.50, "quantity": 200, "category": "stationery", "description": "A5 ruled notebook", "expiry_date": null, "discount_percent": null},
+  {"id": 9, "name": "HDMI Cable", "price": 12.00, "quantity": 0, "category": "accessories", "description": "2m HDMI cable", "expiry_date": null, "discount_percent": null},
+  {"id": 10, "name": "Standing Desk", "price": 499.00, "quantity": 1, "category": "furniture", "description": "Electric height-adjustable desk", "expiry_date": null, "discount_percent": 15.0},
+  {"id": 11, "name": "Keyboard", "price": 79.99, "quantity": 30, "category": "electronics", "description": "Mechanical RGB keyboard", "expiry_date": null, "discount_percent": null},
+  {"id": 12, "name": "USB Hub", "price": 35.00, "quantity": 20, "category": "accessories", "description": "7-port USB 3.0 hub", "expiry_date": null, "discount_percent": null},
+  {"id": 13, "name": "Butter", "price": 3.20, "quantity": 25, "category": "food", "description": "Unsalted butter 200g", "expiry_date": "2026-06-15", "discount_percent": null},
+  {"id": 14, "name": "Office Chair", "price": 320.00, "quantity": 4, "category": "furniture", "description": "Ergonomic mesh chair", "expiry_date": null, "discount_percent": 5.0},
+  {"id": 15, "name": "Pen Pack", "price": 2.99, "quantity": 500, "category": "stationery", "description": "Blue ballpoint pens 10pcs", "expiry_date": null, "discount_percent": null},
+  {"id": 16, "name": "Headphones", "price": 149.00, "quantity": 12, "category": "electronics", "description": "Noise-cancelling over-ear", "expiry_date": null, "discount_percent": null},
+  {"id": 17, "name": "Bread", "price": 1.80, "quantity": 20, "category": "food", "description": "Whole wheat loaf", "expiry_date": "2026-05-22", "discount_percent": null},
+  {"id": 18, "name": "Desk Lamp", "price": 45.00, "quantity": 15, "category": "furniture", "description": "LED adjustable desk lamp", "expiry_date": null, "discount_percent": null},
+  {"id": 19, "name": "Ethernet Cable", "price": 8.50, "quantity": 60, "category": "accessories", "description": "Cat6 5m patch cable", "expiry_date": null, "discount_percent": null}
+  ]
