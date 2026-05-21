@@ -170,3 +170,33 @@ def do_add(service):
                 f"{p.name:<25} "
                 f"quantity={p.quantity}"
             )
+
+    @log_action
+    def do_restock(service):
+        pid = prompt_int("  Product ID   : ", min_val=1)
+        amount = prompt_int("  Add Quantity : ", min_val=1)
+
+        try:
+            p = service.restock(pid, amount)
+
+            print(
+                f"  Restocked {format_id(pid)} — new quantity: {p.quantity}"
+            )
+
+        except (ProductNotFoundError, ValueError) as e:
+            print(f"  ✗ {e}")
+
+    @log_action
+    def do_sell(service):
+        pid = prompt_int("  Product ID   : ", min_val=1)
+        amount = prompt_int("  Sell Quantity: ", min_val=1)
+
+        try:
+            p = service.sell(pid, amount)
+
+            print(
+                f"  Sold {amount}× {p.name} — remaining: {p.quantity}"
+            )
+
+        except (ProductNotFoundError, ValueError) as e:
+            print(f"  ✗ {e}")
