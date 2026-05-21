@@ -130,3 +130,43 @@ def do_add(service):
 
         except (ValueError, TypeError) as e:
             print(f"  ✗ {e}")
+
+    def do_search(service):
+        query = prompt_nonempty("  Search by name: ")
+
+        results = service.search_by_name(query)
+
+        if not results:
+            print("  No products found.")
+        else:
+            print(f"  Found {len(results)} product(s):")
+
+            for p in results:
+                print(
+                    f"    {format_id(p.product_id)} "
+                    f"{p.name:<25} "
+                    f"{format_price(p.price)} "
+                    f"quantity={p.quantity}"
+                )
+
+    def do_filter_category(service):
+        cats = service.get_categories()
+
+        if not cats:
+            print("  No categories available.")
+            return
+
+        print(f"  Available categories: {', '.join(sorted(cats))}")
+
+        cat = prompt_nonempty("  Category: ")
+
+        results = service.filter_by_category(cat)
+
+        print(f"  Products in '{cat}': {len(results)}")
+
+        for p in results:
+            print(
+                f"    {format_id(p.product_id)} "
+                f"{p.name:<25} "
+                f"quantity={p.quantity}"
+            )
