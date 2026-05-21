@@ -200,3 +200,32 @@ def do_add(service):
 
         except (ProductNotFoundError, ValueError) as e:
             print(f"  ✗ {e}")
+
+    def do_expiry_report(service, report_svc):
+        days = prompt_int(
+            "  Warn before expiry (days)? [7]: ",
+            min_val=1,
+            max_val=365
+        )
+
+        report_svc.print_expiry_report(
+            service.get_all_products(),
+            warn_days=days
+        )
+
+    def run():
+        service = InventoryService()
+        file_handler = FileHandler()
+        report_svc = ReportService()
+
+        if os.path.exists(DATA_FILE):
+            try:
+                n = file_handler.load_into_service(service, DATA_FILE)
+
+                print(f"  Loaded {n} product(s) from {DATA_FILE}")
+
+            except (FileNotFoundError, ValueError) as e:
+                print(f"  Warning: Failed to load data — {e}")
+
+        else:
+            print("  Data file not found. Starting with an empty inventory.")
