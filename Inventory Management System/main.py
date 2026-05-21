@@ -71,3 +71,20 @@ def do_add(service):
         f"\n  Product added successfully: "
         f"{format_id(product.product_id)} — {product.name}"
     )
+
+    @log_action
+    def do_remove(service):
+        print("\n Remove Product ")
+
+        pid = prompt_int("  Product ID: ", min_val=1)
+
+        try:
+            removed = service.remove_product(pid)
+
+            print(
+                f"  Removed: "
+                f"{format_id(removed.product_id)} — {removed.name}"
+            )
+
+        except ProductNotFoundError as e:
+            print(f"  ✗ {e}")
