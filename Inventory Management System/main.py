@@ -229,3 +229,63 @@ def do_add(service):
 
         else:
             print("  Data file not found. Starting with an empty inventory.")
+
+        while True:
+            print(MENU)
+
+            choice = input("  Choice: ").strip()
+
+            if choice == "1":
+                report_svc.print_full_inventory(service.get_all_products())
+
+            elif choice == "2":
+                do_add(service)
+
+            elif choice == "3":
+                do_remove(service)
+
+            elif choice == "4":
+                do_update(service)
+
+            elif choice == "5":
+                do_search(service)
+
+            elif choice == "6":
+                do_filter_category(service)
+
+            elif choice == "7":
+                threshold = prompt_int("  Low stock threshold [5]: ", min_val=1)
+                report_svc.print_low_stock(service.get_all_products(), threshold)
+
+            elif choice == "8":
+                report_svc.print_summary(service.get_all_products())
+                report_svc.print_category_breakdown(service.get_all_products())
+
+            elif choice == "9":
+                do_restock(service)
+
+            elif choice == "10":
+                do_sell(service)
+
+            elif choice == "11":
+                do_expiry_report(service, report_svc)
+
+            elif choice == "12":
+                file_handler.export_csv(EXPORT_CSV, service.get_all_products())
+                file_handler.export_low_stock_csv(LOW_STOCK_CSV, service.get_all_products())
+                file_handler.export_expired_csv(EXPIRED_CSV, service.get_all_products())
+
+            elif choice == "0":
+                if confirm("  Save before exiting?"):
+                    file_handler.save_from_service(service, DATA_FILE)
+
+                    print(f"  Saved {len(service)} product(s) to {DATA_FILE}")
+
+                print("Thanks,bye!")
+                break
+
+            else:
+                print("  Invalid choice Please enter a number from 0 to 12")
+
+    if __name__ == "__main__":
+        run()
