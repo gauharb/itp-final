@@ -99,3 +99,22 @@ class TestInventoryService(unittest.TestCase):
 
     def _add_laptop(self):
         return self.service.add_product("Laptop", 1200.0, 5, "electronics")
+
+    def test_add_product(self):
+        p = self._add_laptop()
+        self.assertIn(p.product_id, self.service)
+
+    def test_id_increments(self):
+        p1 = self._add_laptop()
+        p2 = self.service.add_product("Mouse", 25.0, 50)
+        self.assertEqual(p1.product_id, 1)
+        self.assertEqual(p2.product_id, 2)
+
+    def test_get_product_found(self):
+        p = self._add_laptop()
+        found = self.service.get_product(p.product_id)
+        self.assertEqual(found, p)
+
+    def test_get_product_not_found(self):
+        with self.assertRaises(ProductNotFoundError):
+            self.service.get_product(999)
