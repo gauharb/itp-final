@@ -91,3 +91,11 @@ class TestExpiry(unittest.TestCase):
     def test_days_until_expiry_none(self):
                             p = Product(product_id=5, name="Water", price=0.5, quantity=50)
                             self.assertIsNone(p.days_until_expiry())
+
+class TestInventoryService(unittest.TestCase):
+
+    def setUp(self):
+        self.service = InventoryService()
+
+    def _add_laptop(self):
+        return self.service.add_product("Laptop", 1200.0, 5, "electronics")
