@@ -32,6 +32,7 @@ python -m pytest tests/test_inventory.py -v
 
 ## Project Structure
 
+```bash
 main.py                       - main menu and program logic
 
 models/product.py             - Product and DiscountedProduct classes
@@ -47,3 +48,4 @@ utils/validators.py           - input validation, decorators, regex checks
 tests/test_inventory.py       - 36 unit tests
 
 data/inventory.json           - product storage
+```
