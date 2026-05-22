@@ -128,4 +128,18 @@ class TestInventoryService(unittest.TestCase):
         p = self._add_laptop()
         self.service.update_product(p.product_id, name="Gaming Laptop")
         self.assertEqual(self.service.get_product(p.product_id).name, "Gaming Laptop")
-        self.assertEqual(self.service.get_product(p.product_id).name, "Gaming Laptop")
+
+    def test_search_by_name(self):
+        self._add_laptop()
+        results = self.service.search_by_name("lapt")
+        self.assertEqual(len(results), 1)
+
+    def test_search_no_results(self):
+        results = self.service.search_by_name("xyz123")
+        self.assertEqual(results, [])
+
+    def test_filter_by_category(self):
+        self._add_laptop()
+        self.service.add_product("Apple", 1.5, 100, "food")
+        electronics = self.service.filter_by_category("electronics")
+        self.assertEqual(len(electronics), 1)
