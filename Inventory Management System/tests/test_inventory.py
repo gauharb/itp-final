@@ -118,3 +118,14 @@ class TestInventoryService(unittest.TestCase):
     def test_get_product_not_found(self):
         with self.assertRaises(ProductNotFoundError):
             self.service.get_product(999)
+
+    def test_remove_product(self):
+        p = self._add_laptop()
+        self.service.remove_product(p.product_id)
+        self.assertNotIn(p.product_id, self.service)
+
+    def test_update_product(self):
+        p = self._add_laptop()
+        self.service.update_product(p.product_id, name="Gaming Laptop")
+        self.assertEqual(self.service.get_product(p.product_id).name, "Gaming Laptop")
+        self.assertEqual(self.service.get_product(p.product_id).name, "Gaming Laptop")
