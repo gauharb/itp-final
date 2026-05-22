@@ -15,12 +15,14 @@ A console app to manage warehouse products and track stock levels.
 - Save and load data from JSON file
 
 ## How to run
-
+```bash
 python main.py
-
+```
 To run tests:
-python -m pytest tests/test_inventory.py -v
 
+```bash
+python -m pytest tests/test_inventory.py -v
+```
 ## Team Members
 
 - Mukhtarova Dana — Report + Validators
