@@ -1,5 +1,6 @@
 # Inventory Management System
 Final project for Introduction to Programming 2 (Python).
+
 A console app to manage warehouse products and track stock levels.
 
 ## Project Description
