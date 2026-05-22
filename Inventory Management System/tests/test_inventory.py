@@ -47,3 +47,22 @@ class TestProduct(unittest.TestCase):
         def test_equality(self):
             p2 = Product(product_id=1, name="Another", price=0, quantity=0)
             self.assertEqual(self.product, p2)
+
+            class TestDiscountedProduct(unittest.TestCase):
+
+                def setUp(self):
+                    self.dp = DiscountedProduct(
+                        product_id=10, name="TV", price=500.0,
+                        quantity=3, discount_percent=20.0
+                    )
+
+                def test_discounted_price(self):
+                    self.assertAlmostEqual(self.dp.discounted_price(), 400.0)
+
+                def test_invalid_discount_raises(self):
+                    with self.assertRaises(ValueError):
+                        self.dp.discount = 150.0
+
+                def test_to_dict_has_discount(self):
+                    d = self.dp.to_dict()
+                    self.assertIn("discount_percent", d)
