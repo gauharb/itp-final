@@ -41,7 +41,7 @@ services/inventory.py         - add, remove, update, search, sell, restock produ
 
 services/report.py            - inventory reports and category breakdown
 
-utils/file_handler.py         - load and save JSON, export to CSV
+utils/file_handler.py         - load and save JSON, save to CSV
 
 utils/validators.py           - input validation, decorators, regex checks
 
