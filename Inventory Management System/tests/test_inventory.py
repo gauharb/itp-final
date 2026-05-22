@@ -175,3 +175,20 @@ class TestInventoryService(unittest.TestCase):
         import types
         gen = self.service.iter_products()
         self.assertIsInstance(gen, types.GeneratorType)
+
+    def test_get_expired(self):
+        from datetime import timedelta
+        yesterday = (date.today() - timedelta(days=1)).isoformat()
+        self.service.add_product("Old Milk", 1.0, 5, expiry_date=yesterday)
+        self.service.add_product("Fresh Juice", 2.0, 3)
+        expired = self.service.get_expired_products()
+        self.assertEqual(len(expired), 1)
+
+    def test_get_expiring_soon(self):
+        from datetime import timedelta
+        soon = (date.today() + timedelta(days=3)).isoformat()
+        later = (date.today() + timedelta(days=30)).isoformat()
+        self.service.add_product("Yogurt", 1.0, 2, expiry_date=soon)
+        self.service.add_product("Cheese", 3.0, 1, expiry_date=later)
+        expiring = self.service.get_expiring_soon(days=7)
+        self.assertEqual(len(expiring), 1)
