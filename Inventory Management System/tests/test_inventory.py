@@ -192,3 +192,27 @@ class TestInventoryService(unittest.TestCase):
         self.service.add_product("Cheese", 3.0, 1, expiry_date=later)
         expiring = self.service.get_expiring_soon(days=7)
         self.assertEqual(len(expiring), 1)
+
+class TestEdgeCases(unittest.TestCase):
+
+    def test_empty_inventory_summary(self):
+        from services.report import ReportService
+        rs = ReportService()
+        stats = rs.summary([])
+        self.assertEqual(stats["total_products"], 0)
+        self.assertEqual(stats["total_value"], 0.0)
+
+    def test_price_range_invalid(self):
+        svc = InventoryService()
+        with self.assertRaises(ValueError):
+            svc.filter_by_price_range(100, 50)
+
+    def test_update_unknown_field(self):
+        svc = InventoryService()
+        p = svc.add_product("Test", 10.0, 1)
+        with self.assertRaises(ValueError):
+            svc.update_product(p.product_id, color="red")
+
+
+if __name__ == "__main__":
+    unittest.main(verbosity=2)
