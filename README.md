@@ -31,10 +31,17 @@ python -m pytest tests/test_inventory.py -v
 ## Project Structure
 
 main.py                       - main menu and program logic
+
 models/product.py             - Product and DiscountedProduct classes
+
 services/inventory.py         - add, remove, update, search, sell, restock products
+
 services/report.py            - inventory reports and category breakdown
+
 utils/file_handler.py         - load and save JSON, export to CSV
+
 utils/validators.py           - input validation, decorators, regex checks
+
 tests/test_inventory.py       - 36 unit tests
+
 data/inventory.json           - product storage
