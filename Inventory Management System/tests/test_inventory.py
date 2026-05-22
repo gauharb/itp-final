@@ -143,3 +143,18 @@ class TestInventoryService(unittest.TestCase):
         self.service.add_product("Apple", 1.5, 100, "food")
         electronics = self.service.filter_by_category("electronics")
         self.assertEqual(len(electronics), 1)
+
+    def test_restock(self):
+        p = self._add_laptop()
+        self.service.restock(p.product_id, 10)
+        self.assertEqual(self.service.get_product(p.product_id).quantity, 15)
+
+    def test_sell_success(self):
+        p = self._add_laptop()
+        self.service.sell(p.product_id, 3)
+        self.assertEqual(self.service.get_product(p.product_id).quantity, 2)
+
+    def test_sell_not_enough_stock(self):
+        p = self._add_laptop()
+        with self.assertRaises(ValueError):
+            self.service.sell(p.product_id, 100)
