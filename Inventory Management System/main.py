@@ -300,7 +300,6 @@ def run():
             "Starting with an empty inventory."
         )
 
-    # Main loop
 
     while True:
         print(MENU)
