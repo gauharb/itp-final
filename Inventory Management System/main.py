@@ -16,6 +16,7 @@ from utils.validators import (
     format_id,
     log_action
 )
+
 DATA_FILE = os.path.join("data", "inventory.json")
 EXPORT_CSV = os.path.join("data", "export_full.csv")
 LOW_STOCK_CSV = os.path.join("data", "export_low_stock.csv")
@@ -40,6 +41,8 @@ MENU = """
 ║  0.  Save and Exit                    ║
 ╚═══════════════════════════════════════╝
 """
+
+
 @log_action
 def do_add(service):
     print("\n Add new product ")
@@ -72,220 +75,229 @@ def do_add(service):
         f"{format_id(product.product_id)} — {product.name}"
     )
 
-    @log_action
-    def do_remove(service):
-        print("\n Remove Product ")
 
-        pid = prompt_int("  Product ID: ", min_val=1)
+@log_action
+def do_remove(service):
+    print("\n Remove Product ")
 
-        try:
-            removed = service.remove_product(pid)
+    pid = prompt_int("  Product ID: ", min_val=1)
 
-            print(
-                f"  Removed: "
-                f"{format_id(removed.product_id)} — {removed.name}"
-            )
+    try:
+        removed = service.remove_product(pid)
 
-        except ProductNotFoundError as e:
-            print(f"  ✗ {e}")
+        print(
+            f"  Removed: "
+            f"{format_id(removed.product_id)} — {removed.name}"
+        )
 
-    @log_action
-    def do_update(service):
-        print("\n Update Product ")
+    except ProductNotFoundError as e:
+        print(f"  ✗ {e}")
 
-        pid = prompt_int("  Product ID: ", min_val=1)
 
-        try:
-            product = service.get_product(pid)
+@log_action
+def do_update(service):
+    print("\n Update Product ")
 
-        except ProductNotFoundError as e:
-            print(f"  ✗ {e}")
-            return
+    pid = prompt_int("  Product ID: ", min_val=1)
 
-        print(f"  Current product: {product}")
+    try:
+        product = service.get_product(pid)
 
-        print("  Available fields: name, price, quantity, category, description, expiry_date")
+    except ProductNotFoundError as e:
+        print(f"  ✗ {e}")
+        return
 
-        field = input("  Which field to update? ").strip().lower()
+    print(f"  Current product: {product}")
 
-        if not field:
-            print("  Cancelled")
-            return
+    print("  Available fields: name, price, quantity, category, description, expiry_date")
 
-        if field == "price":
-            value = prompt_float(f"  New value for '{field}': ")
+    field = input("  Which field to update? ").strip().lower()
 
-        elif field == "quantity":
-            value = prompt_int(f"  New value for '{field}': ", min_val=0)
+    if not field:
+        print("  Cancelled")
+        return
 
-        elif field == "expiry_date":
-            value = prompt_date("  New expiry date: ")
+    if field == "price":
+        value = prompt_float(f"  New value for '{field}': ")
 
-        else:
-            value = prompt_nonempty(f"  New value for '{field}': ")
+    elif field == "quantity":
+        value = prompt_int(f"  New value for '{field}': ", min_val=0)
 
-        try:
-            updated = service.update_product(pid, **{field: value})
-            print(f"  Updated: {updated}")
+    elif field == "expiry_date":
+        value = prompt_date("  New expiry date: ")
 
-        except (ValueError, TypeError) as e:
-            print(f"  ✗ {e}")
+    else:
+        value = prompt_nonempty(f"  New value for '{field}': ")
 
-    def do_search(service):
-        query = prompt_nonempty("  Search by name: ")
+    try:
+        updated = service.update_product(pid, **{field: value})
+        print(f"  Updated: {updated}")
 
-        results = service.search_by_name(query)
+    except (ValueError, TypeError) as e:
+        print(f"  ✗ {e}")
 
-        if not results:
-            print("  No products found.")
-        else:
-            print(f"  Found {len(results)} product(s):")
 
-            for p in results:
-                print(
-                    f"    {format_id(p.product_id)} "
-                    f"{p.name:<25} "
-                    f"{format_price(p.price)} "
-                    f"quantity={p.quantity}"
-                )
+def do_search(service):
+    query = prompt_nonempty("  Search by name: ")
 
-    def do_filter_category(service):
-        cats = service.get_categories()
+    results = service.search_by_name(query)
 
-        if not cats:
-            print("  No categories available.")
-            return
-
-        print(f"  Available categories: {', '.join(sorted(cats))}")
-
-        cat = prompt_nonempty("  Category: ")
-
-        results = service.filter_by_category(cat)
-
-        print(f"  Products in '{cat}': {len(results)}")
+    if not results:
+        print("  No products found.")
+    else:
+        print(f"  Found {len(results)} product(s):")
 
         for p in results:
             print(
                 f"    {format_id(p.product_id)} "
                 f"{p.name:<25} "
+                f"{format_price(p.price)} "
                 f"quantity={p.quantity}"
             )
 
-    @log_action
-    def do_restock(service):
-        pid = prompt_int("  Product ID   : ", min_val=1)
-        amount = prompt_int("  Add Quantity : ", min_val=1)
 
-        try:
-            p = service.restock(pid, amount)
+def do_filter_category(service):
+    cats = service.get_categories()
 
-            print(
-                f"  Restocked {format_id(pid)} — new quantity: {p.quantity}"
-            )
+    if not cats:
+        print("  No categories available.")
+        return
 
-        except (ProductNotFoundError, ValueError) as e:
-            print(f"  ✗ {e}")
+    print(f"  Available categories: {', '.join(sorted(cats))}")
 
-    @log_action
-    def do_sell(service):
-        pid = prompt_int("  Product ID   : ", min_val=1)
-        amount = prompt_int("  Sell Quantity: ", min_val=1)
+    cat = prompt_nonempty("  Category: ")
 
-        try:
-            p = service.sell(pid, amount)
+    results = service.filter_by_category(cat)
 
-            print(
-                f"  Sold {amount}× {p.name} — remaining: {p.quantity}"
-            )
+    print(f"  Products in '{cat}': {len(results)}")
 
-        except (ProductNotFoundError, ValueError) as e:
-            print(f"  ✗ {e}")
-
-    def do_expiry_report(service, report_svc):
-        days = prompt_int(
-            "  Warn before expiry (days)? [7]: ",
-            min_val=1,
-            max_val=365
+    for p in results:
+        print(
+            f"    {format_id(p.product_id)} "
+            f"{p.name:<25} "
+            f"quantity={p.quantity}"
         )
 
-        report_svc.print_expiry_report(
-            service.get_all_products(),
-            warn_days=days
+
+@log_action
+def do_restock(service):
+    pid = prompt_int("  Product ID   : ", min_val=1)
+    amount = prompt_int("  Add Quantity : ", min_val=1)
+
+    try:
+        p = service.restock(pid, amount)
+
+        print(
+            f"  Restocked {format_id(pid)} — new quantity: {p.quantity}"
         )
 
-    def run():
-        service = InventoryService()
-        file_handler = FileHandler()
-        report_svc = ReportService()
+    except (ProductNotFoundError, ValueError) as e:
+        print(f"  ✗ {e}")
 
-        if os.path.exists(DATA_FILE):
-            try:
-                n = file_handler.load_into_service(service, DATA_FILE)
 
-                print(f"  Loaded {n} product(s) from {DATA_FILE}")
+@log_action
+def do_sell(service):
+    pid = prompt_int("  Product ID   : ", min_val=1)
+    amount = prompt_int("  Sell Quantity: ", min_val=1)
 
-            except (FileNotFoundError, ValueError) as e:
-                print(f"  Warning: Failed to load data — {e}")
+    try:
+        p = service.sell(pid, amount)
+
+        print(
+            f"  Sold {amount}× {p.name} — remaining: {p.quantity}"
+        )
+
+    except (ProductNotFoundError, ValueError) as e:
+        print(f"  ✗ {e}")
+
+
+def do_expiry_report(service, report_svc):
+    days = prompt_int(
+        "  Warn before expiry (days)? [7]: ",
+        min_val=1,
+        max_val=365
+    )
+
+    report_svc.print_expiry_report(
+        service.get_all_products(),
+        warn_days=days
+    )
+
+
+def run():
+    service = InventoryService()
+    file_handler = FileHandler()
+    report_svc = ReportService()
+
+    if os.path.exists(DATA_FILE):
+        try:
+            n = file_handler.load_into_service(service, DATA_FILE)
+
+            print(f"  Loaded {n} product(s) from {DATA_FILE}")
+
+        except (FileNotFoundError, ValueError) as e:
+            print(f"  Warning: Failed to load data — {e}")
+
+    else:
+        print("  Data file not found. Starting with an empty inventory.")
+
+    while True:
+        print(MENU)
+
+        choice = input("  Choice: ").strip()
+
+        if choice == "1":
+            report_svc.print_full_inventory(service.get_all_products())
+
+        elif choice == "2":
+            do_add(service)
+
+        elif choice == "3":
+            do_remove(service)
+
+        elif choice == "4":
+            do_update(service)
+
+        elif choice == "5":
+            do_search(service)
+
+        elif choice == "6":
+            do_filter_category(service)
+
+        elif choice == "7":
+            threshold = prompt_int("  Low stock threshold [5]: ", min_val=1)
+            report_svc.print_low_stock(service.get_all_products(), threshold)
+
+        elif choice == "8":
+            report_svc.print_summary(service.get_all_products())
+            report_svc.print_category_breakdown(service.get_all_products())
+
+        elif choice == "9":
+            do_restock(service)
+
+        elif choice == "10":
+            do_sell(service)
+
+        elif choice == "11":
+            do_expiry_report(service, report_svc)
+
+        elif choice == "12":
+            file_handler.export_csv(EXPORT_CSV, service.get_all_products())
+            file_handler.export_low_stock_csv(LOW_STOCK_CSV, service.get_all_products())
+            file_handler.export_expired_csv(EXPIRED_CSV, service.get_all_products())
+
+        elif choice == "0":
+            if confirm("  Save before exiting?"):
+                file_handler.save_from_service(service, DATA_FILE)
+
+                print(f"  Saved {len(service)} product(s) to {DATA_FILE}")
+
+            print("Thanks, bye!")
+            break
 
         else:
-            print("  Data file not found. Starting with an empty inventory.")
+            print("  Invalid choice. Please enter a number from 0 to 12")
 
-        while True:
-            print(MENU)
 
-            choice = input("  Choice: ").strip()
-
-            if choice == "1":
-                report_svc.print_full_inventory(service.get_all_products())
-
-            elif choice == "2":
-                do_add(service)
-
-            elif choice == "3":
-                do_remove(service)
-
-            elif choice == "4":
-                do_update(service)
-
-            elif choice == "5":
-                do_search(service)
-
-            elif choice == "6":
-                do_filter_category(service)
-
-            elif choice == "7":
-                threshold = prompt_int("  Low stock threshold [5]: ", min_val=1)
-                report_svc.print_low_stock(service.get_all_products(), threshold)
-
-            elif choice == "8":
-                report_svc.print_summary(service.get_all_products())
-                report_svc.print_category_breakdown(service.get_all_products())
-
-            elif choice == "9":
-                do_restock(service)
-
-            elif choice == "10":
-                do_sell(service)
-
-            elif choice == "11":
-                do_expiry_report(service, report_svc)
-
-            elif choice == "12":
-                file_handler.export_csv(EXPORT_CSV, service.get_all_products())
-                file_handler.export_low_stock_csv(LOW_STOCK_CSV, service.get_all_products())
-                file_handler.export_expired_csv(EXPIRED_CSV, service.get_all_products())
-
-            elif choice == "0":
-                if confirm("  Save before exiting?"):
-                    file_handler.save_from_service(service, DATA_FILE)
-
-                    print(f"  Saved {len(service)} product(s) to {DATA_FILE}")
-
-                print("Thanks,bye!")
-                break
-
-            else:
-                print("  Invalid choice Please enter a number from 0 to 12")
-
-    if __name__ == "__main__":
-        run()
+if __name__ == "__main__":
+    run()
